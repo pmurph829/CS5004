@@ -1,11 +1,15 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.function.Predicate;
+
 import static org.junit.Assert.assertEquals;
 
 public class TestSentenceADT {
   SentenceADT s1 = new WordList();
   SentenceADT s2 = new WordList();
+  SentenceADT s3 = new WordList();
+  SentenceADT pig = new WordList();
 
   @Before
   public void setUp(){
@@ -22,6 +26,22 @@ public class TestSentenceADT {
     s2.addNode(NodeType.PUNCTUATION, ",");
     s2.addNode(NodeType.WORD, "thanks");
     s2.addNode(NodeType.PUNCTUATION, "!");
+
+    s3.addNode(NodeType.WORD, "Zebras");
+    s3.addNode(NodeType.WORD, "zoom");
+    s3.addNode(NodeType.WORD, "in");
+    s3.addNode(NodeType.WORD, "the");
+    s3.addNode(NodeType.WORD, "zoo");
+    s3.addNode(NodeType.PUNCTUATION, ".");
+
+    pig.addNode(NodeType.WORD, "Making");
+    pig.addNode(NodeType.WORD, "a");
+    pig.addNode(NodeType.WORD, "pig");
+    pig.addNode(NodeType.WORD, "deal");
+    pig.addNode(NodeType.WORD, "about");
+    pig.addNode(NodeType.WORD, "pig");
+    pig.addNode(NodeType.WORD, "latin");
+    pig.addNode(NodeType.PUNCTUATION, "!");
   }
 
   @Test
@@ -60,8 +80,21 @@ public class TestSentenceADT {
   }
 
   @Test
-  public void test_countPunctuation(){
-    assertEquals(2, s1.countPunctuation());
-    assertEquals(2, s2.countPunctuation());
+  public void test_countPredicate(){
+    Predicate<Node> p1 = n -> n.getType() == NodeType.PUNCTUATION;
+    Predicate<Node> p2 = n -> n.toString().contains("z") || n.toString().contains("Z");
+    assertEquals(2, s1.countPredicate(p1));
+    assertEquals(2, s2.countPredicate(p1));
+    assertEquals(0, s1.countPredicate(p2));
+    assertEquals(0, s2.countPredicate(p2));
+    assertEquals(3, s3.countPredicate(p2));
   }
+
+  @Test
+  public void test_translatePigLatin(){
+    String translated = "akingmay away igpay ealday aboutway igpay atinlay!";
+    assertEquals(translated, pig.translatePigLatin().toString());
+  }
+
+
 }

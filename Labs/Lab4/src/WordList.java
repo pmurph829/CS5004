@@ -1,6 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Predicate;
-import java.util.function.Function;
 
 public class WordList implements SentenceADT {
   protected ArrayList<Node> list;
@@ -86,8 +86,8 @@ public class WordList implements SentenceADT {
 
   @Override
   public SentenceADT filter(Predicate<Node> p) {
-    SentenceADT newList = this.clone();
-    for (Node n : newList.getList()){
+    SentenceADT newList = new WordList();
+    for (Node n : this.clone().getList()){
       if (p.test(n)){
         newList.addNode(n.getType(), n.getData());
       }
@@ -96,11 +96,34 @@ public class WordList implements SentenceADT {
   }
 
   @Override
-  public int countPunctuation(){
-    Predicate<Node> p = n -> n.getType()==NodeType.PUNCTUATION;
+  public int countPredicate(Predicate<Node> p){
     SentenceADT filteredList = filter(p);
-    return filteredList.getNumberOfWords();
+    return filteredList.getList().size();
   }
 
+  @Override
+  public SentenceADT translatePigLatin(){
+    String[] v = {"a", "e", "i", "o", "u"};
+    ArrayList<String> vowels = new ArrayList(Arrays.asList(v));
+    String firstLetter;
+    SentenceADT translatedList = new WordList();
+    for (Node n : this.list){
+      switch (n.getType()) {
+        case WORD:
+          firstLetter = String.valueOf(n.getData().charAt(0)).toLowerCase();
+          if (vowels.contains(firstLetter)) {
+            translatedList.addNode(NodeType.WORD, n.getData() + "way");
+          } else {
+            String newData = n.getData().substring(1) + firstLetter + "ay";
+            translatedList.addNode(NodeType.WORD, newData);
+          }
+          break;
+        case PUNCTUATION:
+          translatedList.addNode(NodeType.PUNCTUATION, n.getData());
+          break;
+      }
+    }
+    return translatedList;
+  }
 
 }

@@ -52,8 +52,9 @@ public interface SentenceADT {
    */
   SentenceADT merge(SentenceADT other);
 
-
   SentenceADT filter(Predicate<Node> p);
 
-  int countPunctuation();
+  int countPredicate(Predicate<Node> p);
+
+  SentenceADT translatePigLatin();
 }
