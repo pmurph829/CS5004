@@ -52,9 +52,23 @@ public interface SentenceADT {
    */
   SentenceADT merge(SentenceADT other);
 
+  /**
+   * Filter out all elements of a list that do not match a given predicate function.
+   * @param p predicate function to test each node on.
+   * @return the filtered list.
+   */
   SentenceADT filter(Predicate<Node> p);
 
+  /**
+   * Count the number of elements in a list that match a given predicate.
+   * @param p the predicate used for the count.
+   * @return the number of elements that matched the predicate.
+   */
   int countPredicate(Predicate<Node> p);
 
+  /**
+   * Translate all words in a list to pig latin.
+   * @return the translated list.
+   */
   SentenceADT translatePigLatin();
 }

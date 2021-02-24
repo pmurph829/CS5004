@@ -2,9 +2,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
+/**
+ * Class that holds WordNodes and PunctuationNodes in order to represent a Sentence.
+ */
 public class WordList implements SentenceADT {
   protected ArrayList<Node> list;
 
+  /**
+   * Initialize a WordList object with no entries.
+   */
   public WordList(){
     this.list = new ArrayList<Node>();
   }

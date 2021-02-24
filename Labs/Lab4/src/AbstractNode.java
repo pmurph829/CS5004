@@ -1,3 +1,6 @@
+/**
+ * Defines methods that are shared between WordNode and PunctuationNode.
+ */
 public abstract class AbstractNode implements Node{
   protected String data;
   protected NodeType type;
