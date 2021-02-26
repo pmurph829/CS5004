@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.function.Predicate;
+
 /** A sentence of word nodes, punctuation nodes, and empty node. Empty node marks the end. */
 public interface SentenceADT {
 
@@ -12,6 +13,7 @@ public interface SentenceADT {
 
   /**
    * Add a new node to the list given a node type and the data it contains.
+   *
    * @param type the type of node to add
    * @param data the data that will be held in the node.
    */
@@ -19,6 +21,7 @@ public interface SentenceADT {
 
   /**
    * Return the list contained in a word list.
+   *
    * @return
    */
   ArrayList<Node> getList();
@@ -54,6 +57,7 @@ public interface SentenceADT {
 
   /**
    * Filter out all elements of a list that do not match a given predicate function.
+   *
    * @param p predicate function to test each node on.
    * @return the filtered list.
    */
@@ -61,6 +65,7 @@ public interface SentenceADT {
 
   /**
    * Count the number of elements in a list that match a given predicate.
+   *
    * @param p the predicate used for the count.
    * @return the number of elements that matched the predicate.
    */
@@ -68,6 +73,7 @@ public interface SentenceADT {
 
   /**
    * Translate all words in a list to pig latin.
+   *
    * @return the translated list.
    */
   SentenceADT translatePigLatin();
