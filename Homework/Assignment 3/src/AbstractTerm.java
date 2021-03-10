@@ -1,12 +1,8 @@
+/** Class that represents an abstract term that can be placed into a Polynomial. */
 public abstract class AbstractTerm implements Term {
   protected Term next;
   protected int coefficient;
   protected int power;
-
-  @Override
-  public Term getNext() {
-    return this.next;
-  }
 
   @Override
   public void setNext(Term t) {
@@ -29,18 +25,29 @@ public abstract class AbstractTerm implements Term {
   }
 
   @Override
-  public void removeTerm(int power) {
-    if (this.next.getPower() == power) {
-      if (power == 0) {
-        this.next = new FinalTerm();
-      }
-      this.next = this.next.getNext();
+  public void insertTerm(int coeff, int power) {
+    if (power == this.power) { // Add the coefficients if the term of this power exists already.
+      this.coefficient += coeff;
       return;
+    } else if (power > this.next.getPower()) {
+      Term t = new PowerTerm(coeff, power, this.next);
+      this.next = t;
+      return;
+    } else if (power <= this.next.getPower()) {
+      this.next.insertTerm(coeff, power);
     }
-    if (this.next != null) {
-      this.next.removeTerm(power);
+  }
+
+  @Override
+  public Term removeTermHelp(int power, Term prev) {
+    if (power == prev.getPower() && power == this.power) { // this is the first term
+      return this.next;
     }
-    return;
+    if (power == this.power) {
+      prev.setNext(this.next);
+      return null;
+    }
+    return this.next.removeTermHelp(power, this);
   }
 
   @Override

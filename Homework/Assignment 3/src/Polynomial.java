@@ -1,3 +1,4 @@
+/** Interface for the Polynomial. */
 public interface Polynomial {
 
   /**

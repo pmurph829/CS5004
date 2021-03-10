@@ -1,7 +1,5 @@
+/** Interface for all Terms. */
 public interface Term {
-
-  /** Getter method for a term's next field. */
-  Term getNext();
 
   /**
    * Setter method to update a term's next field.
@@ -35,12 +33,15 @@ public interface Term {
    * Remove a term with a given power from the list.
    *
    * @param power the power to search for.
+   * @return
    */
-  void removeTerm(int power);
+  Term removeTermHelp(int power, Term prev);
 
   int findCoefficient(int power);
 
   double evaluate(double var, double acc);
 
   PolynomialImpl addHelp(PolynomialImpl acc);
+
+  void insertTerm(int coeff, int power);
 }
