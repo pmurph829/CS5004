@@ -9,6 +9,8 @@ import cs5004.questionnaire.ShortAnswer;
 import cs5004.questionnaire.YesNo;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /** tests for the Questionnaire class. */
 public class QuestionnaireTest {
@@ -17,6 +19,8 @@ public class QuestionnaireTest {
   Questionnaire questionnaire2;
   Questionnaire questionnaire3;
   String baseToString;
+  Question qA;
+  Question qB;
   Question qC;
 
   /**
@@ -37,9 +41,11 @@ public class QuestionnaireTest {
     qC = new Likert("How do you feel about the following: 'Blue is a nice color'?",
             false);
     qC.answer("Agree");
+
     questionnaire3.addQuestion("name", qA);
     questionnaire3.addQuestion("quest", qB);
     questionnaire3.addQuestion("color", qC);
+
     baseToString = "Question: What is your name?\n" +
             "\n" +
             "Answer: Peter\n" +
@@ -147,5 +153,64 @@ public class QuestionnaireTest {
     questionnaire3.getQuestion(4);
   }
 
+  /**
+   * Test the getRequiredQuestions method.
+   */
+  @Test
+  public void test_getRequiredQuestions(){
+    assertEquals(
+        "[Question: What is your name?\n"
+            + "\n"
+            + "Answer: Peter\n"
+            + "\n"
+            + ", Question: Do you seek the Holy Grail?\n"
+            + "\n"
+            + "Answer: Yes\n"
+            + "\n"
+            + "]", questionnaire3.getRequiredQuestions().toString());
+  }
+
+  /**
+   * Test the getOptional Questions method.
+   */
+  @Test
+  public void test_getOptionalQuestions(){
+    assertEquals("[Question: How do you feel about the following: 'Blue is a nice color'?\n" +
+            "\n" +
+            "Answer: Agree\n\n]", questionnaire3.getOptionalQuestions().toString());
+  }
+
+  /**
+   * Test the isComplete method.
+   */
+  @Test
+  public void test_isComplete(){
+    Questionnaire incomplete = new QuestionnaireImpl();
+    Question q1 = new YesNo("Test 1", true);
+    Question q2 = new ShortAnswer("Test 2", false);
+    Question q3 = new Likert("Test 3", true);
+    Question q4 = new YesNo("Test 4", false);
+    incomplete.addQuestion("1", q1);
+    incomplete.addQuestion("2", q2);
+    incomplete.addQuestion("3", q3);
+    incomplete.addQuestion("4", q4);
+
+    assertTrue(questionnaire1.isComplete());
+    assertFalse(incomplete.isComplete());
+
+    q1.answer("yes");
+    assertFalse(incomplete.isComplete());
+
+    q3.answer("Agree");
+    assertTrue(incomplete.isComplete());
+  }
+
+  /**
+   * Test the getResponses method.
+   */
+  @Test
+  public void test_getResponses(){
+    assertEquals("[Peter, Yes, Agree]", questionnaire3.getResponses().toString());
+  }
 
 }
