@@ -129,18 +129,42 @@ public class QuestionnaireImpl implements Questionnaire{
 
   @Override
   public Questionnaire filter(Predicate<Question> pq) {
-    List<Question> filteredQs= new ArrayList<>();
+    Questionnaire filteredQuestionnaire = new QuestionnaireImpl();
 
-    return null;
+    for (String id : this.idList){
+      Question q = this.qHashMap.get(id);
+      if (pq.test(q)){
+        filteredQuestionnaire.addQuestion(id, q.copy());
+      }
+    }
+    return filteredQuestionnaire;
   }
 
   @Override
   public void sort(Comparator<Question> comp) {
-
+    List<Question> allQs = this.createQuestionList();
+    List<Question> sortedQs = allQs
+            .stream()
+            .sorted(comp)
+            .collect(Collectors.toList());
+    List<String> sortedIds = new ArrayList<>();
+    for (Question q : sortedQs){
+      for (String id : this.idList){
+        if (this.qHashMap.get(id).equals(q)){
+          sortedIds.add(id);
+        }
+      }
+    }
+    this.idList = sortedIds;
   }
 
   @Override
   public <R> R fold(BiFunction<Question, R, R> bf, R seed) {
-    return null;
+    R acc = seed;
+    List<Question> allQs = this.createQuestionList();
+    for (Question q : allQs){
+      acc = bf.apply(q, acc);
+    }
+    return acc;
   }
 }

@@ -1,6 +1,10 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Comparator;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
+
 import cs5004.questionnaire.Likert;
 import cs5004.questionnaire.Question;
 import cs5004.questionnaire.Questionnaire;
@@ -213,4 +217,43 @@ public class QuestionnaireTest {
     assertEquals("[Peter, Yes, Agree]", questionnaire3.getResponses().toString());
   }
 
+  /**
+   * Test the filter method.
+   */
+  @Test
+  public void test_filter(){
+    Predicate<Question> p = question -> question.getPrompt().length() > 20;
+    Questionnaire filtered =  questionnaire3.filter(p);
+    assertEquals(
+        "Question: Do you seek the Holy Grail?\n"
+            + "\n"
+            + "Answer: Yes\n"
+            + "\n"
+            + "Question: How do you feel about the following: 'Blue is a nice color'?\n"
+            + "\n"
+            + "Answer: Agree\n"
+            + "\n", filtered.toString());
+    assertEquals(baseToString, questionnaire3.toString());
+  }
+
+  /**
+   * Test the sort method.
+   */
+  @Test
+  public void test_sort(){
+    Comparator<Question> comp = (o1, o2) -> (int) (o2.getPrompt().length() - o1.getPrompt().length());
+    questionnaire3.sort(comp);
+    System.out.println(questionnaire3.toString());
+  }
+
+  /**
+   * Test the fold method.
+   */
+  @Test
+  public void test_fold(){
+    BiFunction<Question, String, String> bf = (q, acc) -> acc + q.getPrompt() + " / ";
+    String s = questionnaire3.fold(bf, "");
+    assertEquals("What is your name? / Do you seek the Holy Grail? " +
+            "/ How do you feel about the following: 'Blue is a nice color'? / ", s);
+  }
 }
