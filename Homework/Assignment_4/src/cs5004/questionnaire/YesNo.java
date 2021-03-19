@@ -5,6 +5,9 @@ import java.util.function.Predicate;
 /** A question that can only be answered with Yes or No. */
 public class YesNo extends AbstractQuestion {
 
+  /** Predicate that returns true if a String matches 'yes' or 'no' regardless of case. */
+  private final Predicate<String> p = s -> s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("no");
+
   /**
    * Constructor for a YesNo (Question) object.
    *
@@ -15,12 +18,6 @@ public class YesNo extends AbstractQuestion {
     this.prompt = prompt;
     this.required = required;
   }
-
-  /**
-   * Predicate that returns true if a String matches 'yes' or 'no' regardless of case.
-   */
-  private final Predicate<String> p = s -> s.equalsIgnoreCase("yes")
-          || s.equalsIgnoreCase("no");
 
   @Override
   public void answer(String ans) {

@@ -32,7 +32,7 @@ public interface Question {
   String getAnswer();
 
   /**
-   * Return a copy of the Question object
+   * Return a copy of the Question object.
    *
    * @return the copied object.
    */

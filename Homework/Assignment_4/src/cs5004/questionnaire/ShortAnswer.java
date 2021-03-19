@@ -5,6 +5,9 @@ import java.util.function.Predicate;
 /** A question that takes 280 character responses as answers. */
 public class ShortAnswer extends AbstractQuestion {
 
+  /** A predicate that checks if a String has a length less than or equal to 280. */
+  private final Predicate<String> p = s -> s.length() <= 280;
+
   /**
    * Constructor for a ShortAnswer (Question) object.
    *
@@ -16,13 +19,11 @@ public class ShortAnswer extends AbstractQuestion {
     this.required = required;
   }
 
-  /**
-   * A predicate that checks if a String has a length less than or equal to 280.
-   */
-  private final Predicate<String> p = s -> s.length() <= 280;
-
   @Override
   public void answer(String ans) {
+    if (ans == null) {
+      throw new IllegalArgumentException("Answer cannot be null.");
+    }
     this.answerHelp(p, ans);
   }
 

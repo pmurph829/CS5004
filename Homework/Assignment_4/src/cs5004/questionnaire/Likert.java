@@ -6,6 +6,19 @@ import java.util.function.Predicate;
 public class Likert extends AbstractQuestion {
 
   /**
+   * Predicate that checks if a string matches one of the values of the LikertResponseOption enum.
+   */
+  private final Predicate<String> p =
+      s -> {
+        for (LikertResponseOption v : LikertResponseOption.values()) {
+          if (s.equalsIgnoreCase(v.getText())) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+  /**
    * Constructor for a Likert (Question) object.
    *
    * @param prompt the question prompt.
@@ -15,18 +28,6 @@ public class Likert extends AbstractQuestion {
     this.prompt = prompt;
     this.required = required;
   }
-
-  /**
-   * Predicate that checks if a string matches one of the values of the LikertResponseOption enum.
-   */
-  private final Predicate<String> p = s -> {
-    for (LikertResponseOption v : LikertResponseOption.values()) {
-      if (s.equalsIgnoreCase(v.getText())){
-        return true;
-      }
-    }
-    return false;
-  };
 
   @Override
   public void answer(String ans) {

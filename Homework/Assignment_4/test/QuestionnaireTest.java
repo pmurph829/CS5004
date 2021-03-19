@@ -2,6 +2,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Comparator;
+import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
@@ -27,61 +28,53 @@ public class QuestionnaireTest {
   Question qB;
   Question qC;
 
-  /**
-   * Set up QuestionnaireImpl objects.
-   */
+  /** Set up QuestionnaireImpl objects. */
   @Before
-  public void setUp(){
+  public void setUp() {
     questionnaire1 = new QuestionnaireImpl();
     questionnaire2 = new QuestionnaireImpl();
     questionnaire3 = new QuestionnaireImpl();
-    questionnaire2.addQuestion("Monday", new YesNo("Is today Monday?",
-            true));
+    questionnaire2.addQuestion("Monday", new YesNo("Is today Monday?", true));
 
     Question qA = new ShortAnswer("What is your name?", true);
     qA.answer("Peter");
     Question qB = new YesNo("Do you seek the Holy Grail?", true);
     qB.answer("Yes");
-    qC = new Likert("How do you feel about the following: 'Blue is a nice color'?",
-            false);
+    qC = new Likert("How do you feel about the following: 'Blue is a nice color'?", false);
     qC.answer("Agree");
 
     questionnaire3.addQuestion("name", qA);
     questionnaire3.addQuestion("quest", qB);
     questionnaire3.addQuestion("color", qC);
 
-    baseToString = "Question: What is your name?\n" +
-            "\n" +
-            "Answer: Peter\n" +
-            "\n" +
-            "Question: Do you seek the Holy Grail?\n" +
-            "\n" +
-            "Answer: Yes\n" +
-            "\n" +
-            "Question: How do you feel about the following: 'Blue is a nice color'?\n" +
-            "\n" +
-            "Answer: Agree\n\n";
+    baseToString =
+        "Question: What is your name?\n"
+            + "\n"
+            + "Answer: Peter\n"
+            + "\n"
+            + "Question: Do you seek the Holy Grail?\n"
+            + "\n"
+            + "Answer: Yes\n"
+            + "\n"
+            + "Question: How do you feel about the following: 'Blue is a nice color'?\n"
+            + "\n"
+            + "Answer: Agree";
   }
 
-  /**
-   * Test the toString method.
-   */
+  /** Test the toString method. */
   @Test
-  public void test_toString(){
+  public void test_toString() {
     assertEquals(baseToString, questionnaire3.toString());
   }
 
-  /**
-   * test the addQuestion method with valid input.
-   */
+  /** test the addQuestion method with valid input. */
   @Test
-  public void test_addQuestion(){
+  public void test_addQuestion() {
     Question q1 = new ShortAnswer("What is your name?", true);
     q1.answer("Peter");
     Question q2 = new YesNo("Do you seek the Holy Grail?", true);
     q2.answer("Yes");
-    Question q3 = new Likert("How do you feel about the following: 'Blue is a nice color'?",
-            false);
+    Question q3 = new Likert("How do you feel about the following: 'Blue is a nice color'?", false);
     q3.answer("Agree");
     questionnaire1.addQuestion("name", q1);
     questionnaire1.addQuestion("quest", q2);
@@ -90,20 +83,16 @@ public class QuestionnaireTest {
     assertEquals(baseToString, questionnaire1.toString());
   }
 
-  /**
-   * Test the addQuestion method with invalid input.
-   */
+  /** Test the addQuestion method with invalid input. */
   @Test(expected = IllegalArgumentException.class)
-  public void test_addQuestionInvalid(){
+  public void test_addQuestionInvalid() {
     Question q = new YesNo("Was yesterday Monday?", false);
     questionnaire2.addQuestion("Monday", q);
   }
 
-  /**
-   * test the remove question method with valid input.
-   */
+  /** test the remove question method with valid input. */
   @Test
-  public void test_removeQuestion(){
+  public void test_removeQuestion() {
     questionnaire3.removeQuestion("color");
     assertEquals(
         "Question: What is your name?\n"
@@ -112,56 +101,44 @@ public class QuestionnaireTest {
             + "\n"
             + "Question: Do you seek the Holy Grail?\n"
             + "\n"
-            + "Answer: Yes\n"
-            + "\n", questionnaire3.toString());
+            + "Answer: Yes",
+        questionnaire3.toString());
     questionnaire3.addQuestion("color", qC);
   }
 
-  /**
-   * Test the removeQuestion method with invalid input.
-   */
-  @Test (expected = IllegalArgumentException.class)
-  public void test_removeQuestionInvalid(){
+  /** Test the removeQuestion method with invalid input. */
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void test_removeQuestionInvalid() {
     questionnaire3.removeQuestion("capitalOfAssyria");
   }
 
-  /**
-   * Test the getQuestion method with valid input.
-   */
+  /** Test the getQuestion method with valid input. */
   @Test
-  public void test_getQuestion(){
-    assertEquals("Question: Do you seek the Holy Grail?\n"
-            + "\n"
-            + "Answer: Yes\n"
-            + "\n", questionnaire3.getQuestion("quest").toString());
+  public void test_getQuestion() {
+    assertEquals(
+        "Question: Do you seek the Holy Grail?\n" + "\n" + "Answer: Yes\n\n",
+        questionnaire3.getQuestion("quest").toString());
 
-    assertEquals("Question: Do you seek the Holy Grail?\n"
-            + "\n"
-            + "Answer: Yes\n"
-            + "\n", questionnaire3.getQuestion(2).toString());
+    assertEquals(
+        "Question: Do you seek the Holy Grail?\n" + "\n" + "Answer: Yes\n\n",
+        questionnaire3.getQuestion(2).toString());
   }
 
-  /**
-   * Test the getQuestion method (id) with invalid input.
-   */
-  @Test (expected = IllegalArgumentException.class)
-  public void test_getQuestionInvalid1(){
+  /** Test the getQuestion method (id) with invalid input. */
+  @Test(expected = NoSuchElementException.class)
+  public void test_getQuestionInvalid1() {
     questionnaire3.getQuestion("capitalOfAssyria");
   }
 
-  /**
-   * Test the getQuestion method (num) with invalid input.
-   */
-  @Test (expected = IllegalArgumentException.class)
-  public void test_getQuestionInvalid2(){
+  /** Test the getQuestion method (num) with invalid input. */
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void test_getQuestionInvalid2() {
     questionnaire3.getQuestion(4);
   }
 
-  /**
-   * Test the getRequiredQuestions method.
-   */
+  /** Test the getRequiredQuestions method. */
   @Test
-  public void test_getRequiredQuestions(){
+  public void test_getRequiredQuestions() {
     assertEquals(
         "[Question: What is your name?\n"
             + "\n"
@@ -169,26 +146,23 @@ public class QuestionnaireTest {
             + "\n"
             + ", Question: Do you seek the Holy Grail?\n"
             + "\n"
-            + "Answer: Yes\n"
+            + "Answer: Yes\n\n]",
+        questionnaire3.getRequiredQuestions().toString());
+  }
+
+  /** Test the getOptional Questions method. */
+  @Test
+  public void test_getOptionalQuestions() {
+    assertEquals(
+        "[Question: How do you feel about the following: 'Blue is a nice color'?\n"
             + "\n"
-            + "]", questionnaire3.getRequiredQuestions().toString());
+            + "Answer: Agree\n\n]",
+        questionnaire3.getOptionalQuestions().toString());
   }
 
-  /**
-   * Test the getOptional Questions method.
-   */
+  /** Test the isComplete method. */
   @Test
-  public void test_getOptionalQuestions(){
-    assertEquals("[Question: How do you feel about the following: 'Blue is a nice color'?\n" +
-            "\n" +
-            "Answer: Agree\n\n]", questionnaire3.getOptionalQuestions().toString());
-  }
-
-  /**
-   * Test the isComplete method.
-   */
-  @Test
-  public void test_isComplete(){
+  public void test_isComplete() {
     Questionnaire incomplete = new QuestionnaireImpl();
     Question q1 = new YesNo("Test 1", true);
     Question q2 = new ShortAnswer("Test 2", false);
@@ -209,21 +183,19 @@ public class QuestionnaireTest {
     assertTrue(incomplete.isComplete());
   }
 
-  /**
-   * Test the getResponses method.
-   */
+  /** Test the getResponses method. */
   @Test
-  public void test_getResponses(){
+  public void test_getResponses() {
     assertEquals("[Peter, Yes, Agree]", questionnaire3.getResponses().toString());
+    System.out.println(questionnaire3.toString());
+    assertEquals("[]", questionnaire1.getResponses().toString());
   }
 
-  /**
-   * Test the filter method.
-   */
+  /** Test the filter method. */
   @Test
-  public void test_filter(){
+  public void test_filter() {
     Predicate<Question> p = question -> question.getPrompt().length() > 20;
-    Questionnaire filtered =  questionnaire3.filter(p);
+    Questionnaire filtered = questionnaire3.filter(p);
     assertEquals(
         "Question: Do you seek the Holy Grail?\n"
             + "\n"
@@ -231,29 +203,40 @@ public class QuestionnaireTest {
             + "\n"
             + "Question: How do you feel about the following: 'Blue is a nice color'?\n"
             + "\n"
-            + "Answer: Agree\n"
-            + "\n", filtered.toString());
+            + "Answer: Agree",
+        filtered.toString());
     assertEquals(baseToString, questionnaire3.toString());
   }
 
-  /**
-   * Test the sort method.
-   */
+  /** Test the sort method. */
   @Test
-  public void test_sort(){
-    Comparator<Question> comp = (o1, o2) -> (int) (o2.getPrompt().length() - o1.getPrompt().length());
+  public void test_sort() {
+    Comparator<Question> comp =
+        (o1, o2) -> (int) (o2.getPrompt().length() - o1.getPrompt().length());
     questionnaire3.sort(comp);
-    System.out.println(questionnaire3.toString());
+    assertEquals(
+        "Question: How do you feel about the following: 'Blue is a nice color'?\n"
+            + "\n"
+            + "Answer: Agree\n"
+            + "\n"
+            + "Question: Do you seek the Holy Grail?\n"
+            + "\n"
+            + "Answer: Yes\n"
+            + "\n"
+            + "Question: What is your name?\n"
+            + "\n"
+            + "Answer: Peter",
+        questionnaire3.toString());
   }
 
-  /**
-   * Test the fold method.
-   */
+  /** Test the fold method. */
   @Test
-  public void test_fold(){
+  public void test_fold() {
     BiFunction<Question, String, String> bf = (q, acc) -> acc + q.getPrompt() + " / ";
     String s = questionnaire3.fold(bf, "");
-    assertEquals("What is your name? / Do you seek the Holy Grail? " +
-            "/ How do you feel about the following: 'Blue is a nice color'? / ", s);
+    assertEquals(
+        "What is your name? / Do you seek the Holy Grail? "
+            + "/ How do you feel about the following: 'Blue is a nice color'? / ",
+        s);
   }
 }
