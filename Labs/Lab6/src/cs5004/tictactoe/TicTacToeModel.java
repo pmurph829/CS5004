@@ -11,13 +11,9 @@ public class TicTacToeModel implements TicTacToe {
   private Player[][] board;
   private Player current;
 
-  /**
-   * Constructor for the TicTacToeModel class.
-   */
+  /** Constructor for the TicTacToeModel class. */
   public TicTacToeModel() {
     this.board = new Player[3][3];
-    //    playerX = Player.X;
-    //    playerO = Player.O;
     this.current = Player.X;
   }
 
@@ -73,7 +69,7 @@ public class TicTacToeModel implements TicTacToe {
   /**
    * Find and check all triples on the board.
    *
-   * @return
+   * @retrun an array of all triples on the board (including diagonals).
    */
   private Player[][] findTriples() {
     Player[][] boardCopy = this.getBoard();
