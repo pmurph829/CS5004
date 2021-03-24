@@ -7,10 +7,10 @@ package cs5004.tictactoe;
 public interface TicTacToeController {
 
   /**
-   * Execute a single game of tic tac toe given a tic tac toe Model. When the game is over,
-   * the playGame method ends.
+   * Execute a single game of tic tac toe given a tic tac toe Model. When the game is over, the
+   * playGame method ends.
    *
    * @param m a non-null tic tac toe Model
    */
-  void playGame(TicTacToe m);
+  void playGame(TicTacToe m) throws IllegalStateException;
 }

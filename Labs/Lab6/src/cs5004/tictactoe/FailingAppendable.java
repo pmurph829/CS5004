@@ -2,9 +2,7 @@ package cs5004.tictactoe;
 
 import java.io.IOException;
 
-/**
- * A mock to simulate a failure to write to the Appendable.
- */
+/** A mock to simulate a failure to write to the Appendable. */
 public class FailingAppendable implements Appendable {
 
   @Override
