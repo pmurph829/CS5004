@@ -1,10 +1,10 @@
 package cs5004.marblesolitaire.model;
 
-/** Class that represents a board of marbles used in the game Marble Solitaire. */
+/** Class that represents a board of marbles used in the game MarbleSpace Solitaire. */
 public class MarbleBoard {
   private final int gridSize;
   private final int buffer;
-  private final Marble[][] board;
+  private final MarbleSpace[][] board;
 
   /**
    * Constructor for a marbleBoard object.
@@ -20,18 +20,17 @@ public class MarbleBoard {
       throw new IllegalArgumentException("Arm length must be a positive odd integer.");
     }
 
-    this.gridSize = 2 * armSize + 1;
-    this.board = new Marble[this.gridSize][this.gridSize];
-    this.buffer = (this.gridSize - armSize) / 2;
-
+    this.gridSize = 3 * armSize - 2;
+    this.board = new MarbleSpace[this.gridSize][this.gridSize];
+    this.buffer = armSize - 1;
     for (int r = 0; r < this.gridSize; r++) {
       for (int c = 0; c < this.gridSize; c++) {
         if (isInBuffer(r, c)) {
           this.board[r][c] = null;
         } else if (r == sRow && c == sCol) {
-          this.board[r][c] = new Marble(r, c, false);
+          this.board[r][c] = new MarbleSpace(r, c, false);
         } else {
-          this.board[r][c] = new Marble(r, c, true);
+          this.board[r][c] = new MarbleSpace(r, c, true);
         }
       }
     }
@@ -50,7 +49,7 @@ public class MarbleBoard {
     String s = "";
     for (int r = 0; r < this.gridSize; r++) {
       for (int c = 0; c < this.gridSize; c++) {
-        if (this.board[r][c] == null) {
+        if (isInBuffer(r, c)) {
           s += " ";
         } else {
           s += this.board[r][c].toString();
@@ -58,6 +57,7 @@ public class MarbleBoard {
         if (c != this.gridSize - 1) {
           s += " ";
         } else {
+          s = s.stripTrailing();
           s += "\n";
         }
       }
@@ -66,7 +66,7 @@ public class MarbleBoard {
   }
 
   /**
-   * Getter method that returns gridsize.
+   * Getter method that returns grid size.
    *
    * @return the size of the gird.
    */
@@ -109,14 +109,14 @@ public class MarbleBoard {
   /**
    * Get the marble object at a specified row/column pair on the board.
    *
-   * @param r the row of the Marble.
-   * @param c the column of the Marble.
-   * @return the Marble object that is found.
+   * @param r the row of the MarbleSpace.
+   * @param c the column of the MarbleSpace.
+   * @return the MarbleSpace object that is found.
    * @throws IllegalArgumentException if the specified position is invalid.
    */
-  public Marble getMarble(int r, int c) throws IllegalArgumentException {
-    if (!onBoard(r, c)) {
-      throw new IllegalArgumentException("Marble not found.");
+  public MarbleSpace getMarble(int r, int c) throws IllegalArgumentException {
+    if (!this.onBoard(r, c)) {
+      throw new IllegalArgumentException("Position is not on board.");
     }
     return this.board[r][c];
   }

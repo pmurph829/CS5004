@@ -26,7 +26,8 @@ public class MarbleSolitaireModelImpl implements MarbleSolitaireModel {
    * @param armSize the arm size of the board to be created.
    */
   public MarbleSolitaireModelImpl(int armSize) {
-    this.mBoard = new MarbleBoard(armSize, armSize, armSize);
+    int mid = armSize + ((armSize - 1) / 2) - 1;
+    this.mBoard = new MarbleBoard(mid, mid, armSize);
   }
 
   /**
@@ -52,28 +53,49 @@ public class MarbleSolitaireModelImpl implements MarbleSolitaireModel {
 
   @Override
   public void move(int fromRow, int fromCol, int toRow, int toCol) throws IllegalArgumentException {
-    /*
-    1. ensure the spots are two spaces away and not diagonal.
-    2. ensure the from marble is visible and the to marble is not.
-    3. ensure the middle marble is visible
-    4. Set the from marble visibility to false
-    5. Set the to marble visibility to true
-    6. Set the middle marble visibility to false
-    */
+    if (this.isGameOver()) {
+      throw new IllegalArgumentException("Game is over!");
+    }
+    if (!this.canMove(fromRow, fromCol, toRow, toCol)) {
+      throw new IllegalArgumentException("Unable to move to this location.");
+    }
 
+    MarbleSpace fromMarbleSpace = this.mBoard.getMarble(fromRow, fromCol);
+    MarbleSpace toMarbleSpace = this.mBoard.getMarble(toRow, toCol);
+    MarbleSpace middleMarbleSpace = this.findMiddleMarble(fromRow, fromCol, toRow, toCol);
+
+    fromMarbleSpace.setMarbleStatus(false);
+    toMarbleSpace.setMarbleStatus(true);
+    middleMarbleSpace.setMarbleStatus(false);
+  }
+
+  /**
+   * Determine if a move can be made from a certain position to another position. Does not update
+   * the board.
+   *
+   * @param fromRow the row number of the position to be moved from (starts at 0)
+   * @param fromCol the column number of the position to be moved from (starts at 0)
+   * @param toRow the row number of the position to be moved to (starts at 0)
+   * @param toCol the column number of the position to be moved to (starts at 0)
+   * @return true if the move is valid.
+   */
+  private boolean canMove(int fromRow, int fromCol, int toRow, int toCol) {
+
+    // Just checks if difference is 2 or 0
     if (!(this.verifyDifference(fromRow, toRow) && this.verifyDifference(fromCol, toCol))) {
-      throw new IllegalArgumentException("The given positions are invalid.");
+      return false;
     }
-    Marble fromMarble = this.mBoard.getMarble(fromRow, fromCol);
-    Marble toMarble = this.mBoard.getMarble(toRow, toCol);
-    Marble middleMarble = this.findMiddleMarble(fromRow, fromCol, toRow, toCol);
+    // Check the move is not diagonal
+    if (Math.abs(toRow - fromRow) == Math.abs(toCol - fromCol)) {
+      return false;
+    }
+    MarbleSpace fromMarbleSpace = this.mBoard.getMarble(fromRow, fromCol);
+    MarbleSpace toMarbleSpace = this.mBoard.getMarble(toRow, toCol);
+    MarbleSpace middleMarbleSpace = this.findMiddleMarble(fromRow, fromCol, toRow, toCol);
 
-    if (!fromMarble.isVisible() || toMarble.isVisible() || !middleMarble.isVisible()) {
-      throw new IllegalArgumentException("Invalid board setup.");
-    }
-    fromMarble.setVisibility(false);
-    toMarble.setVisibility(true);
-    middleMarble.setVisibility(false);
+    return fromMarbleSpace.containsMarble()
+        && middleMarbleSpace.containsMarble()
+        && !toMarbleSpace.containsMarble();
   }
 
   /**
@@ -91,27 +113,49 @@ public class MarbleSolitaireModelImpl implements MarbleSolitaireModel {
     return diff == 2 || diff == 0;
   }
 
-  private Marble findMiddleMarble(int fr, int fc, int tr, int tc) {
-    Marble middleMarble;
+  /**
+   * Find the marble that is between a from and to position.
+   *
+   * @param fr row of the from space.
+   * @param fc column of the from space.
+   * @param tr row of the to space.
+   * @param tc column of the to space.
+   * @return the space that is in between the from space and to space.
+   */
+  private MarbleSpace findMiddleMarble(int fr, int fc, int tr, int tc) {
+    if (!(this.verifyDifference(fr, tr) && this.verifyDifference(fc, tc))) {
+      throw new IllegalArgumentException("Invalid positions, no middle marble found.");
+    }
+    MarbleSpace middleMarbleSpace;
     int rowAvg = (fr + tr) / 2;
     int colAvg = (fc + tc) / 2;
-    if (rowAvg == 0) {
-      middleMarble = this.mBoard.getMarble(fr, colAvg);
+    if (rowAvg == fr) {
+      middleMarbleSpace = this.mBoard.getMarble(fr, colAvg);
     } else {
-      middleMarble = this.mBoard.getMarble(rowAvg, fc);
+      middleMarbleSpace = this.mBoard.getMarble(rowAvg, fc);
     }
-    return middleMarble;
+    return middleMarbleSpace;
   }
 
   @Override
   public boolean isGameOver() {
     for (int r = 0; r < this.mBoard.getGridSize(); r++) {
       for (int c = 0; c < this.mBoard.getGridSize(); c++) {
-        if ()
-
+        try {
+          if (!this.mBoard.getMarble(r, c).containsMarble()) {
+            continue;
+          }
+          if (this.canMove(r, c, r + 2, c)
+              || this.canMove(r, c, r, c + 2)
+              || this.canMove(r, c, r - 2, c)
+              || this.canMove(r, c, r, c - 2)) {
+            return false;
+          }
+        } catch (IllegalArgumentException ignored) {
+        }
       }
     }
-    return false;
+    return true;
   }
 
   @Override
@@ -125,8 +169,8 @@ public class MarbleSolitaireModelImpl implements MarbleSolitaireModel {
     for (int r = 0; r < this.mBoard.getGridSize(); r++) {
       for (int c = 0; c < this.mBoard.getGridSize(); c++) {
         if (this.mBoard.onBoard(r, c)) {
-          Marble m = this.mBoard.getMarble(r, c);
-          if (m.isVisible()) {
+          MarbleSpace m = this.mBoard.getMarble(r, c);
+          if (m.containsMarble()) {
             score++;
           }
         }
