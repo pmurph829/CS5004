@@ -145,13 +145,31 @@ public class MarbleSolitaireModelImpl implements MarbleSolitaireModel {
           if (!this.mBoard.getMarble(r, c).containsMarble()) {
             continue;
           }
-          if (this.canMove(r, c, r + 2, c)
-              || this.canMove(r, c, r, c + 2)
-              || this.canMove(r, c, r - 2, c)
-              || this.canMove(r, c, r, c - 2)) {
-            return false;
-          }
         } catch (IllegalArgumentException ignored) {
+        }
+
+        if (this.mBoard.onBoard(r, c)) {
+
+          if (this.mBoard.onBoard(r + 2, c)) {
+            if (this.canMove(r, c, r + 2, c)) {
+              return false;
+            }
+          }
+          if (this.mBoard.onBoard(r, c + 2)) {
+            if (this.canMove(r, c, r, c + 2)) {
+              return false;
+            }
+          }
+          if (this.mBoard.onBoard(r - 2, c)) {
+            if (this.canMove(r, c, r - 2, c)) {
+              return false;
+            }
+          }
+          if (this.mBoard.onBoard(r, c - 2)) {
+            if (this.canMove(r, c, r, c - 2)) {
+              return false;
+            }
+          }
         }
       }
     }

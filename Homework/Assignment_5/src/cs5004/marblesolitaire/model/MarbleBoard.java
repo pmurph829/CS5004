@@ -16,7 +16,7 @@ public class MarbleBoard {
    *     the board.
    */
   public MarbleBoard(int sRow, int sCol, int armSize) throws IllegalArgumentException {
-    if (armSize % 2 != 1) {
+    if (armSize % 2 != 1 || armSize <= 1) {
       throw new IllegalArgumentException("Arm length must be a positive odd integer.");
     }
 

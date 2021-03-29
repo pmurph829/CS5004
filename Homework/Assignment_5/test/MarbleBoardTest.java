@@ -24,8 +24,23 @@ public class MarbleBoardTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testConstructorInvalid2() {
-    MarbleBoard inv2 = new MarbleBoard(10, 10, 3);
+  public void test_constructorInvalid2() {
+    MarbleBoard inv = new MarbleBoard(10, 10, 3);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_ConstructorInvalid3() {
+    MarbleBoard inv = new MarbleBoard(-3, 3, 3);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_ConstructorInvalid4() {
+    MarbleBoard inv = new MarbleBoard(3, -3, 3);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_ConstructorInvalid5() {
+    MarbleBoard inv = new MarbleBoard(3, 3, -3);
   }
 
   @Test

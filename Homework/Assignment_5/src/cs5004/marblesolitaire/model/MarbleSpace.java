@@ -32,18 +32,6 @@ public class MarbleSpace {
     }
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof MarbleSpace)) {
-      return false;
-    }
-    MarbleSpace ms = (MarbleSpace) o;
-    return this.row == ms.getPosition()[0] && this.col == ms.getPosition()[1];
-  }
-
   /**
    * Determine if the MarbleSpace is visible or not.
    *
